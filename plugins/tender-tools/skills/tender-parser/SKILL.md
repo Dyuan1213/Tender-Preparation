@@ -19,8 +19,10 @@ description: 专业解析中文招标文件（PDF/DOCX），自动提取关键�
 - DOCX/PDF 内容较长时，分多次 Read 完整读取所有内容，不要遗漏表格部分
 
 **备选方案（需要Bash权限）：**
-- DOCX：运行 `python scripts/read_docx.py <path> --output extracted.txt`，再 Read 输出文件
+- DOCX：运行 `python "${CLAUDE_PLUGIN_ROOT}/skills/tender-parser/scripts/read_docx.py" <path> --output extracted.txt`，再 Read 输出文件
 - PDF：用 `pdfplumber` 或 `pdfminer` 提取文本
+
+> 路径说明：`${CLAUDE_PLUGIN_ROOT}` 会被 Claude Code 自动替换为本插件的实际安装路径；若本 skill 作为独立 skill（非插件）使用，则改用本 skill 目录下的 `scripts/read_docx.py`。
 
 **注意：** 如遇扫描件（图片型 PDF），告知用户当前版本暂不支持 OCR，建议提供电子版
 
@@ -52,7 +54,7 @@ description: 专业解析中文招标文件（PDF/DOCX），自动提取关键�
 
 - **已配置凭证**：自动调用上传脚本，将报告同步到飞书文档，并返回文档链接
   ```
-  python scripts/feishu_upload.py <report.md> [--folder-token <文件夹token>]
+  python "${CLAUDE_PLUGIN_ROOT}/skills/tender-parser/scripts/feishu_upload.py" <report.md> [--folder-token <文件夹token>]
   ```
 - **未配置凭证**：跳过上传，在回复末尾提示用户参考 `references/feishu-setup.md` 完成配置
 

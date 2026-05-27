@@ -303,12 +303,12 @@ description: >
 # 安装依赖（如未安装）
 pip install python-docx -q
 
-# 生成文档（脚本就在本 skill 的 scripts/ 目录下，使用本 skill 目录的绝对路径调用）
-python "<本 skill 目录>/scripts/create_tender_docx.py" \
+# 生成文档（脚本由插件提供，用 ${CLAUDE_PLUGIN_ROOT} 引用，Claude Code 会自动替换为实际路径）
+python "${CLAUDE_PLUGIN_ROOT}/skills/tender-writer/scripts/create_tender_docx.py" \
   --content-file /tmp/tender_content.json \
   --output /tmp/投标文件.docx
-# 说明：<本 skill 目录> 指当前 skill 所在路径，
-# 通常为 ~/.claude/skills/tender-writer（用户级）或 <项目>/.claude/skills/tender-writer（项目级）。
+# 路径说明：作为插件安装时，${CLAUDE_PLUGIN_ROOT} 自动指向插件实际路径；
+# 若作为独立 skill（非插件）使用，则改用本 skill 目录下的 scripts/create_tender_docx.py。
 ```
 
 **文档格式（脚本默认值，对应上述标准标书格式）：**
