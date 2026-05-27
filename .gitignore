@@ -1,0 +1,17 @@
+# 凭据 / 敏感信息
+**/.env
+*.key
+*.pem
+
+# 工作产物 / 生成文件
+extracted.txt
+*.docx
+tender_content.json
+
+# Python 缓存
+**/__pycache__/
+*.pyc
+
+# 系统
+.DS_Store
+Thumbs.db
