@@ -5,6 +5,8 @@
 - **tender-parser** — 解析招标文件（PDF/DOCX），自动提取关键信息并生成结构化摘要报告。
 - **tender-writer** — 基于招标文件的响应格式要求，逐章编制投标文件，并输出宋体、带页码的 Word 文档（支持表格、配图、标题大纲）。
 
+> **不用 Claude Code？** 在 Codex、扣子(Coze)、ChatGPT 等其他平台或本地手动使用，请看 [在非 Claude Code 环境下使用](docs/在非ClaudeCode环境下使用.md)。
+
 ## 安装（推荐：作为插件）
 
 在 Claude Code 中执行：
