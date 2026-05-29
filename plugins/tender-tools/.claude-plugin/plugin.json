@@ -1,6 +1,6 @@
 {
   "name": "tender-tools",
-  "description": "招标投标工具集。tender-parser：解析招标文件（PDF/DOCX）并生成结构化摘要报告；tender-writer：基于招标文件逐章编制投标文件并输出宋体、带页码的 Word 文档。",
+  "description": "招标投标工具集。tender-parser：解析招标文件（PDF/DOCX）并生成结构化摘要报告；tender-writer：基于招标文件逐章编制投标文件并输出宋体、带页码的 Word 文档；tender-reviewer：基于招标文件审核标书应答完整性、预估综合得分，并对多份标书做串标查重（内置确定性查重脚本）。",
   "author": {
     "name": "Dyuan1213"
   }

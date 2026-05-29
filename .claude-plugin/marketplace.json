@@ -4,13 +4,13 @@
     "name": "Dyuan1213"
   },
   "metadata": {
-    "description": "招标投标工具集 marketplace：提供 tender-tools 插件（招标文件解析 + 投标标书编制）。"
+    "description": "招标投标工具集 marketplace：提供 tender-tools 插件（招标文件解析 + 投标标书编制 + 标书审核）。"
   },
   "plugins": [
     {
       "name": "tender-tools",
       "source": "./plugins/tender-tools",
-      "description": "招标文件解析与投标标书编制工具集：tender-parser 解析招标文件并生成结构化摘要，tender-writer 逐章编制投标文件并输出 Word。"
+      "description": "招标文件解析、投标标书编制与标书审核工具集：tender-parser 解析招标文件并生成结构化摘要，tender-writer 逐章编制投标文件并输出 Word，tender-reviewer 审核标书完整性、预估得分并做多份标书串标查重。"
     }
   ]
 }
