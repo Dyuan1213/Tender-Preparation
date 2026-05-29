@@ -2,7 +2,7 @@
 
 > 适用人群：没有安装 Claude Code，使用 Codex、扣子(Coze)、WorkBuddy、ChatGPT、文心/通义/Kimi 等其他平台，或只想在本地手动使用的用户。
 
-## 先理解：这两个 skill 是什么
+## 先理解：这三个 skill 是什么
 
 每个 skill 由两部分组成，**与平台无关、可单独使用**：
 
@@ -10,7 +10,10 @@
 2. **`scripts/` 里的 Python 脚本** —— 纯 Python 工具，任何能跑 Python 的环境都能用：
    - `tender-parser/scripts/read_docx.py`：把 Word 招标文件提取成纯文本；
    - `tender-writer/scripts/create_tender_docx.py`：把整理好的内容生成**宋体、带页码、含表格/配图**的 Word 标书；
+   - `tender-reviewer/scripts/similarity.py`：对多份标书做**串标查重**（文本/段落/样式/元数据相似度 + 风险等级）；
    - `tender-parser/scripts/feishu_upload.py`：（可选）把报告上传到飞书，需要你自己的飞书应用凭据。
+
+> 三个 skill 对应招投标全流程：**解析招标（parser）→ 编制标书（writer）→ 审核标书（reviewer）**。
 
 > Claude Code 里的"自动触发、`/plugin` 安装"是 Claude 生态专属功能，其他平台没有；但上面的**提示词 + 脚本**可以照常用，只是需要你手动操作。
 
@@ -27,7 +30,7 @@
    ```bash
    git clone https://github.com/Dyuan1213/Tender-Preparation.git
    ```
-   两个 skill 在 `Tender-Preparation/plugins/tender-tools/skills/` 下。
+   三个 skill 在 `Tender-Preparation/plugins/tender-tools/skills/` 下。
 4. **生成的 Word 用宋体**：查看时电脑需装中文字体（Windows 自带宋体）。
 
 ---
@@ -93,6 +96,36 @@ python plugins/tender-tools/skills/tender-parser/scripts/feishu_upload.py report
 python plugins/tender-tools/skills/tender-writer/scripts/create_tender_docx.py --content-file content.json --output 投标文件.docx
 ```
 得到的 Word：宋体、标题加粗四号、正文小四、1.5 倍行距、首行缩进 2 字符、页脚居中页码、自动封面。
+
+---
+
+## 用法三：审核标书（tender-reviewer）
+
+**目标**：基于招标文件审核一份标书的**应答完整性**、**预估能拿多少分**；以及对同项目的**多份标书做串标查重**。报告直接以 Markdown 形式给出，便于阅读，不生成网页/文件。
+
+### 步骤 1：把招标文件和标书都提取成文本
+用法一里的 `read_docx.py` 同样可用：
+```bash
+python plugins/tender-tools/skills/tender-parser/scripts/read_docx.py "招标文件.docx" --output tender.txt
+python plugins/tender-tools/skills/tender-parser/scripts/read_docx.py "标书1.docx" --output pb1.txt
+```
+
+### 步骤 2：用 SKILL.md 作为指令让 AI 审核
+1. 复制 `tender-reviewer/SKILL.md` 全部内容，作为 AI 的系统提示/角色设定。
+2. 把 `tender.txt` 和标书文本贴给 AI，说明要做哪几项：**完整性审核 / 评分预估 / 串标检查**。
+3. AI 按规则输出 Markdown 报告：
+   - **完整性审核**：按资格/实质性格式/★条款/技术方案/商务/附件等维度列出缺失与错误，区分高/中/低严重度；
+   - **评分预估**：分项打分表 + 总分区间（保守/期望/乐观）+ 主要扣分点 + 提分建议；
+   - **多份标书**：固定顺序——先逐份个评（完整性+评分）→ 再串标检查 → 最后总结建议。
+
+### 步骤 3：串标查重（多份标书时，本地跑脚本得确定性指标）
+```bash
+python plugins/tender-tools/skills/tender-reviewer/scripts/similarity.py \
+  --files "标书1.docx" "标书2.docx" [更多...] --output similarity.json
+```
+脚本对每两份标书输出：文本 Jaccard、SequenceMatcher、相同段落占比、样式集合、文档元数据（作者/修改人/时间）与**风险等级**（high/medium/low）。把 `similarity.json` 贴回给 AI，让它**结合内容**区分"正常雷同（招标强制格式）"与"异常雷同"，给出综合研判。
+
+> 注意：脚本的"机器判级"与 AI 的"人工研判"可能不一致（如雷同段落全是招标强制格式时，脚本 medium、研判 低）。报告会把两者**并列标注并说明原因**，互不覆盖。脚本只依赖 `python-docx`，本地运行、不联网、不上传数据。
 
 ---
 
